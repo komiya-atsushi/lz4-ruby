@@ -21,6 +21,8 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
 * Write API documents.
 * Write test codes.
 * Benchmark other compression libraries (lzo, snappy...).
+* Optimize memory allocation.
+* Support mswin32 platform.
 
 == Copyright
 
