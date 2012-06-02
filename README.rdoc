@@ -12,11 +12,11 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
     require 'lz4-ruby'
 
     compressed = LZ4::compress("hello, world")
+    # compressed = LZ4::compressHC("hello, world")
     uncompressed = LZ4::uncompress(compressed)
 
 == TODO
 
-* Support High Cmpression Mode (lz4hc) emthods.
 * Support compressCtx/compress64kCtx methods.
 * Write API documents.
 * Write test codes.

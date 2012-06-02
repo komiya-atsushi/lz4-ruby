@@ -5,6 +5,10 @@ class LZ4
     return LZ4Native::compress(source)
   end
 
+  def self.compressHC(source)
+    return LZ4Native::compressHC(source)
+  end
+
   def self.uncompress(source)
     return LZ4Native::uncompress(source)
   end

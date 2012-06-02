@@ -1,10 +1,12 @@
 #include <ruby.h>
 #include "lz4.h"
-//#include "lz4hc.h"
+#include "lz4hc.h"
+
+typedef int (*CompressFunc)(const char *source, char *dest, int isize);
 
 static VALUE lz4;
 
-static VALUE lz4_ruby_compress(VALUE self, VALUE source) {
+static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   const char *src_p = NULL;
   char *buf = NULL;
   VALUE result;
@@ -23,12 +25,20 @@ static VALUE lz4_ruby_compress(VALUE self, VALUE source) {
   buf[2] = (char)((src_size >> 8) & 0xff);
   buf[3] = (char)(src_size & 0xff);
 
-  comp_size = LZ4_compress(src_p, buf + 4, src_size);
+  comp_size = compressor(src_p, buf + 4, src_size);
   result = rb_str_new(buf, comp_size + 4);
 
   xfree(buf);
 
   return result;
+}
+
+static VALUE lz4_ruby_compress(VALUE self, VALUE source) {
+  return compress(LZ4_compress, self, source);
+}
+
+static VALUE lz4_ruby_compressHC(VALUE self, VALUE source) {
+  return compress(LZ4_compressHC, self, source);
 }
 
 static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
@@ -63,5 +73,6 @@ void Init_lz4ruby(void) {
   lz4 = rb_define_module("LZ4Native");
 
   rb_define_module_function(lz4, "compress", lz4_ruby_compress, 1);
+  rb_define_module_function(lz4, "compressHC", lz4_ruby_compressHC, 1);
   rb_define_module_function(lz4, "uncompress", lz4_ruby_uncompress, 1);
 }
