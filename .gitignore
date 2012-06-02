@@ -54,3 +54,4 @@ ext/lz4hc.?
 *.o
 *.so
 Gemfile.lock
+Gemfile
