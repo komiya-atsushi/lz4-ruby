@@ -20,11 +20,17 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
     # uncompress
     uncompressed = LZ4::uncompress(compressed)
 
+== Benchmark
+
+    method      bpc     comp.time(sec)  uncomp.time(sec)
+    lz4         4.559   0.567           0.252
+    snappy      4.668   1.068           0.265
+    lzo         4.279   1.017           0.586
+
 == TODO
 
 * Write API documents.
 * Write test codes.
-* Benchmark other compression libraries (lzo, snappy...).
 * Optimize memory allocation.
 * Support mswin32 platform.
 
