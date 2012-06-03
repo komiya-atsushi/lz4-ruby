@@ -2,7 +2,7 @@
 
 Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
 
-== Install
+== Installation
 
     gem install lz4-ruby
 
@@ -11,13 +11,17 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
     require 'rubygems'
     require 'lz4-ruby'
 
+    # compress (fast)
     compressed = LZ4::compress("hello, world")
-    # compressed = LZ4::compressHC("hello, world")
+
+    # compress (high compression)
+    compressed = LZ4::compressHC("hello, world")
+
+    # uncompress
     uncompressed = LZ4::uncompress(compressed)
 
 == TODO
 
-* Support compressCtx/compress64kCtx methods.
 * Write API documents.
 * Write test codes.
 * Benchmark other compression libraries (lzo, snappy...).
