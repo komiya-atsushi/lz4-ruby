@@ -113,11 +113,12 @@ EOS
     comp_size = File.size(@compressed_filename)
     
     ratio = comp_size * 8.0 / orig_size
-    comp_time = result_comp.real * 1.0 / NUM_LOOP
-    uncomp_time = result_uncomp.real * 1.0 / NUM_LOOP
+    comp_time = result_comp.real * 1000.0 / NUM_LOOP
+    uncomp_time = result_uncomp.real * 1000.0 / NUM_LOOP
 
-    puts "method\tratio\tcomp.time\tuncomp.time"
-    puts "%s\t%.3f\t%.3f\t\t%.3f" % [@signature, ratio, comp_time, uncomp_time]
+    puts "method\tratio(bpc)\tcomp.time(ms)\tuncomp.time(ms)"
+    puts "-------------------------------------------------------"
+    puts "%s\t%.3f\t\t%.2f\t\t%.2f" % [@signature, ratio, comp_time, uncomp_time]
   end
 
   def do_benchmark

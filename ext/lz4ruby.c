@@ -20,16 +20,16 @@ static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   src_size = RSTRING_LEN(source);
   buf_size = LZ4_compressBound(src_size);
 
-  buf = xmalloc(buf_size + 4);
+  result = rb_str_new(NULL, buf_size + 4);
+  buf = RSTRING_PTR(result);
+
   buf[0] = (char)((src_size >> 24) & 0xff);
   buf[1] = (char)((src_size >> 16) & 0xff);
   buf[2] = (char)((src_size >> 8) & 0xff);
   buf[3] = (char)(src_size & 0xff);
 
   comp_size = compressor(src_p, buf + 4, src_size);
-  result = rb_str_new(buf, comp_size + 4);
-
-  xfree(buf);
+  rb_str_resize(result, comp_size + 4);
 
   return result;
 }
@@ -59,17 +59,15 @@ static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
     | ((src_p[2] & 0xffU) << 8)
     | (src_p[3] & 0xffU);
 
-  buf = xmalloc(buf_size);
+  result = rb_str_new(NULL, buf_size + 1);
+  buf = RSTRING_PTR(result);
 
   read_bytes = LZ4_uncompress(src_p + 4, buf, buf_size);
   if (read_bytes < 0) {
-    xfree(buf);
     rb_raise(lz4_error, "Compressed data is maybe corrupted.");
   }
-  
-  result = rb_str_new(buf, buf_size);
 
-  xfree(buf);
+  buf[buf_size] = '\0';
 
   return result;
 }

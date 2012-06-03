@@ -22,16 +22,19 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
 
 == Benchmark
 
-    method      bpc     comp.time(sec)  uncomp.time(sec)
-    lz4         4.559   0.567           0.252
-    snappy      4.668   1.068           0.265
-    lzo         4.279   1.017           0.586
+Tested on VirtualBox VM : 2-core, 4GB RAM (Host : Core i5-2520M / 8GB RAM).
+
+=== {enwik8}[http://mattmahoney.net/dc/enwik8.zip]
+    method  ratio(bpc)      comp.time(ms)   uncomp.time(ms)
+    -------------------------------------------------------
+    lz4     4.559           519.25          182.67
+    snappy  4.668           1050.73         257.94
+    lzo     4.279           1000.13         574.77
 
 == TODO
 
 * Write API documents.
 * Write test codes.
-* Optimize memory allocation.
 * Support mswin32 platform.
 
 == Copyright
