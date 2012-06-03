@@ -5,6 +5,7 @@
 typedef int (*CompressFunc)(const char *source, char *dest, int isize);
 
 static VALUE lz4;
+static VALUE lz4_error;
 
 static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   const char *src_p = NULL;
@@ -61,7 +62,11 @@ static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
   buf = xmalloc(buf_size);
 
   read_bytes = LZ4_uncompress(src_p + 4, buf, buf_size);
-  // TODO read_bytes が負だったら、データが壊れていることを表す
+  if (read_bytes < 0) {
+    xfree(buf);
+    rb_raise(lz4_error, "Compressed data is maybe corrupted.");
+  }
+  
   result = rb_str_new(buf, buf_size);
 
   xfree(buf);
@@ -75,4 +80,6 @@ void Init_lz4ruby(void) {
   rb_define_module_function(lz4, "compress", lz4_ruby_compress, 1);
   rb_define_module_function(lz4, "compressHC", lz4_ruby_compressHC, 1);
   rb_define_module_function(lz4, "uncompress", lz4_ruby_uncompress, 1);
+
+  lz4_error = rb_define_class_under(lz4, "Error", rb_eStandardError);
 }

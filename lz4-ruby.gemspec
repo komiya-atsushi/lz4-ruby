@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["KOMIYA Atsushi"]
-  s.date = "2012-06-02"
-  s.description = "Ruby bindings for lz4."
+  s.date = "2012-06-03"
+  s.description = "Ruby bindings for LZ4."
   s.email = "komiya.atsushi@gmail.com"
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
-    "Gemfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
@@ -35,7 +34,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.23"
-  s.summary = "Ruby bindings for lz4."
+  s.summary = "Ruby bindings for LZ4."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
