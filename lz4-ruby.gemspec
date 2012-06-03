@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "lz4-ruby"
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["KOMIYA Atsushi"]
@@ -23,6 +23,12 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "benchmarking/bench.rb",
+    "benchmarking/bench_all.sh",
+    "benchmarking/compressor.rb",
+    "benchmarking/compressor_lz4.rb",
+    "benchmarking/compressor_lzo.rb",
+    "benchmarking/compressor_snappy.rb",
     "ext/extconf.rb",
     "ext/lz4ruby.c",
     "lib/lz4-ruby.rb",
