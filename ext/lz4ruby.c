@@ -59,15 +59,13 @@ static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
     | ((src_p[2] & 0xffU) << 8)
     | (src_p[3] & 0xffU);
 
-  result = rb_str_new(NULL, buf_size + 1);
+  result = rb_str_new(NULL, buf_size);
   buf = RSTRING_PTR(result);
 
   read_bytes = LZ4_uncompress(src_p + 4, buf, buf_size);
   if (read_bytes < 0) {
     rb_raise(lz4_error, "Compressed data is maybe corrupted.");
   }
-
-  buf[buf_size] = '\0';
 
   return result;
 }
