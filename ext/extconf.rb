@@ -4,8 +4,9 @@ LZ4_REV_NO = 66
 
 URL = "http://lz4.googlecode.com/svn-history/r#{LZ4_REV_NO}/trunk/"
 
-def download_from_web(url)
-  `wget #{url}`
+def download_from_web(file)
+  File.delete(file) if File.file?(file)
+  `wget #{URL}/#{file}`
   
   if $?.exitstatus != 0
     return false
@@ -14,10 +15,12 @@ def download_from_web(url)
   return true
 end
 
-return if !download_from_web("#{URL}/lz4.c")
-return if !download_from_web("#{URL}/lz4.h")
-return if !download_from_web("#{URL}/lz4hc.c")
-return if !download_from_web("#{URL}/lz4hc.h")
+[ "lz4.c",
+  "lz4.h",
+  "lz4hc.c",
+  "lz4hc.h" ].each do |filename|
+  exit if !download_from_web(filename)
+end
 
 $CFLAGS += " -Wall "
 
