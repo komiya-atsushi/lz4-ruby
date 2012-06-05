@@ -1,6 +1,8 @@
 require 'helper'
 
 class TestLz4Ruby < Test::Unit::TestCase
+  LOOP_COUNT = 257
+  
   @@random = Random.new(123)
 
   context "LZ4::compress" do
@@ -10,7 +12,7 @@ class TestLz4Ruby < Test::Unit::TestCase
       assert_empty("", uncompressed)
     end
     
-    257.times do |t|
+    LOOP_COUNT.times do |t|
       len = t + 1
       text = "a" * len
 
@@ -21,7 +23,7 @@ class TestLz4Ruby < Test::Unit::TestCase
       end
     end
 
-    257.times do |t|
+    LOOP_COUNT.times do |t|
       len = t + 1
       text = @@random.bytes(len)
       
@@ -40,7 +42,7 @@ class TestLz4Ruby < Test::Unit::TestCase
       assert_empty("", uncompressed)
     end
     
-    257.times do |t|
+    LOOP_COUNT.times do |t|
       len = t + 1
       text = "a" * len
 
@@ -51,7 +53,7 @@ class TestLz4Ruby < Test::Unit::TestCase
       end
     end
 
-    257.times do |t|
+    LOOP_COUNT.times do |t|
       len = t + 1
       text = @@random.bytes(len)
       

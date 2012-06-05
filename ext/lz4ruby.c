@@ -7,11 +7,58 @@ typedef int (*CompressFunc)(const char *source, char *dest, int isize);
 static VALUE lz4;
 static VALUE lz4_error;
 
+static int encode_varbyte(int value, char *buf) {
+  buf[0] = value & 0x7f; value >>= 7;
+  if (value == 0) { return 1; }
+  buf[0] |= 0x80;
+  
+  buf[1] = value & 0x7f; value >>= 7;
+  if (value == 0) { return 2; }
+  buf[1] |= 0x80;
+  
+  buf[2] = value & 0x7f; value >>= 7;
+  if (value == 0) { return 3; }
+  buf[2] |= 0x80;
+  
+  buf[3] = value & 0x7f; value >>= 7;
+  if (value == 0) { return 4; }
+  buf[3] |= 0x80;
+
+  buf[4] = value & 0x7f;
+  return 5;
+}
+
+static int decode_varbyte(const char *src, int len, int *value) {
+  if (len < 1) { return -1; }
+
+  *value = src[0] & 0x7f;
+  if ((src[0] & 0x80) == 0) { return 1; }
+  if (len < 2) { return -1; }
+
+  *value |= (src[1] & 0x7f) << 7;
+  if ((src[1] & 0x80) == 0) { return 2; }
+  if (len < 3) { return -1; }
+
+  *value |= (src[2] & 0x7f) << 14;
+  if ((src[2] & 0x80) == 0) { return 3; }
+  if (len < 4) { return -1; }
+
+  *value |= (src[3] & 0x7f) << 21;
+  if ((src[3] & 0x80) == 0) { return 4; }
+  if (len < 5) { return -1; }
+
+  *value |= (src[4] & 0x7f) << 28;
+
+  return 5;
+}
+
 static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   const char *src_p = NULL;
+  char varbyte[5];
   char *buf = NULL;
   VALUE result;
   int src_size;
+  int varbyte_len;
   int buf_size;
   int comp_size;
 
@@ -20,16 +67,15 @@ static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   src_size = RSTRING_LEN(source);
   buf_size = LZ4_compressBound(src_size);
 
-  result = rb_str_new(NULL, buf_size + 4);
+  varbyte_len = encode_varbyte(src_size, varbyte);
+
+  result = rb_str_new(NULL, buf_size + varbyte_len);
   buf = RSTRING_PTR(result);
 
-  buf[0] = (char)((src_size >> 24) & 0xff);
-  buf[1] = (char)((src_size >> 16) & 0xff);
-  buf[2] = (char)((src_size >> 8) & 0xff);
-  buf[3] = (char)(src_size & 0xff);
+  memcpy(buf, varbyte, varbyte_len);
 
-  comp_size = compressor(src_p, buf + 4, src_size);
-  rb_str_resize(result, comp_size + 4);
+  comp_size = compressor(src_p, buf + varbyte_len, src_size);
+  rb_str_resize(result, comp_size + varbyte_len);
 
   return result;
 }
@@ -47,22 +93,20 @@ static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
   char *buf = NULL;
   VALUE result;
   int src_size;
-  int buf_size;
+  int varbyte_len;
+  int buf_size = 0;
   int read_bytes;
 
   Check_Type(source, T_STRING);
   src_p = RSTRING_PTR(source);
   src_size = RSTRING_LEN(source);
 
-  buf_size = ((src_p[0] & 0xffU) << 24)
-    | ((src_p[1] & 0xffU) << 16)
-    | ((src_p[2] & 0xffU) << 8)
-    | (src_p[3] & 0xffU);
+  varbyte_len = decode_varbyte(src_p, src_size, &buf_size);
 
   result = rb_str_new(NULL, buf_size);
   buf = RSTRING_PTR(result);
 
-  read_bytes = LZ4_uncompress(src_p + 4, buf, buf_size);
+  read_bytes = LZ4_uncompress(src_p + varbyte_len, buf, buf_size);
   if (read_bytes < 0) {
     rb_raise(lz4_error, "Compressed data is maybe corrupted.");
   }

@@ -22,7 +22,7 @@ Ruby bindings for {LZ4}[http://code.google.com/p/lz4/].
 
 == Benchmark
 
-Tested on VirtualBox VM : 2-core, 4GB RAM (Host : Core i5-2520M / 8GB RAM).
+Tested on VirtualBox VM : 2-core / 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 
 === {enwik8}[http://mattmahoney.net/dc/enwik8.zip]
     method  ratio(bpc)      comp.time(ms)   uncomp.time(ms)
@@ -34,7 +34,6 @@ Tested on VirtualBox VM : 2-core, 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 == TODO
 
 * Write API documents.
-* Write test codes.
 * Support mswin32 platform.
 
 == Copyright
