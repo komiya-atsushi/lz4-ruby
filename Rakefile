@@ -18,8 +18,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "lz4-ruby"
   gem.homepage = "http://github.com/komiya-atsushi/lz4-ruby"
   gem.license = "MIT"
-  gem.summary = %Q{Ruby bindings for LZ4.}
-  gem.description = %Q{Ruby bindings for LZ4.}
+  gem.summary = %Q{Ruby bindings for LZ4 (Extremely Fast Compression algorithm).}
+  gem.description = %Q{Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm.}
   gem.email = "komiya.atsushi@gmail.com"
   gem.authors = ["KOMIYA Atsushi"]
   gem.extensions = "ext/extconf.rb"

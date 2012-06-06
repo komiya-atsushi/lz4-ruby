@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = "lz4-ruby"
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["KOMIYA Atsushi"]
-  s.date = "2012-06-05"
-  s.description = "Ruby bindings for LZ4."
+  s.date = "2012-06-06"
+  s.description = "Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm."
   s.email = "komiya.atsushi@gmail.com"
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.23"
-  s.summary = "Ruby bindings for LZ4."
+  s.summary = "Ruby bindings for LZ4 (Extremely Fast Compression algorithm)."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
