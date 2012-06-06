@@ -33,6 +33,16 @@ class TestLz4Ruby < Test::Unit::TestCase
         assert_equal(text, uncompressed)
       end
     end
+
+    text = "b" * LOOP_COUNT
+    LOOP_COUNT.times do |t|
+      len = t + 1
+      should "#{len} bytes substring of #{LOOP_COUNT} bytes \"b\"'s" do
+        compressed = LZ4::compress(text, len)
+        uncompressed = LZ4::uncompress(compressed)
+        assert_equal(text[0, len], uncompressed)
+      end
+    end
   end
 
   context "LZ4::compressHC" do
@@ -61,6 +71,16 @@ class TestLz4Ruby < Test::Unit::TestCase
         compressed = LZ4::compressHC(text)
         uncompressed = LZ4::uncompress(compressed)
         assert_equal(text, uncompressed)
+      end
+    end
+    
+    text = "b" * LOOP_COUNT
+    LOOP_COUNT.times do |t|
+      len = t + 1
+      should "#{len} bytes substring of #{LOOP_COUNT} bytes \"b\"'s" do
+        compressed = LZ4::compressHC(text, len)
+        uncompressed = LZ4::uncompress(compressed)
+        assert_equal(text[0, len], uncompressed)
       end
     end
   end

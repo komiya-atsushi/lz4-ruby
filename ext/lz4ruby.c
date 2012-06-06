@@ -52,7 +52,7 @@ static int decode_varbyte(const char *src, int len, int *value) {
   return 5;
 }
 
-static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
+static VALUE compress(CompressFunc compressor, VALUE self, VALUE source, VALUE src_size_prm) {
   const char *src_p = NULL;
   char varbyte[5];
   char *buf = NULL;
@@ -64,7 +64,7 @@ static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
 
   Check_Type(source, T_STRING);
   src_p = RSTRING_PTR(source);
-  src_size = RSTRING_LEN(source);
+  src_size = NUM2INT(src_size_prm);
   buf_size = LZ4_compressBound(src_size);
 
   varbyte_len = encode_varbyte(src_size, varbyte);
@@ -80,12 +80,12 @@ static VALUE compress(CompressFunc compressor, VALUE self, VALUE source) {
   return result;
 }
 
-static VALUE lz4_ruby_compress(VALUE self, VALUE source) {
-  return compress(LZ4_compress, self, source);
+static VALUE lz4_ruby_compress(VALUE self, VALUE source, VALUE src_size) {
+  return compress(LZ4_compress, self, source, src_size);
 }
 
-static VALUE lz4_ruby_compressHC(VALUE self, VALUE source) {
-  return compress(LZ4_compressHC, self, source);
+static VALUE lz4_ruby_compressHC(VALUE self, VALUE source, VALUE src_size) {
+  return compress(LZ4_compressHC, self, source, src_size);
 }
 
 static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
@@ -117,8 +117,8 @@ static VALUE lz4_ruby_uncompress(VALUE self, VALUE source) {
 void Init_lz4ruby(void) {
   lz4 = rb_define_module("LZ4Native");
 
-  rb_define_module_function(lz4, "compress", lz4_ruby_compress, 1);
-  rb_define_module_function(lz4, "compressHC", lz4_ruby_compressHC, 1);
+  rb_define_module_function(lz4, "compress", lz4_ruby_compress, 2);
+  rb_define_module_function(lz4, "compressHC", lz4_ruby_compressHC, 2);
   rb_define_module_function(lz4, "uncompress", lz4_ruby_uncompress, 1);
 
   lz4_error = rb_define_class_under(lz4, "Error", rb_eStandardError);
