@@ -13,6 +13,7 @@ end
 require 'rake'
 
 require 'jeweler'
+require 'rake/extensiontask'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "lz4-ruby"
@@ -22,8 +23,13 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm.}
   gem.email = "komiya.atsushi@gmail.com"
   gem.authors = ["KOMIYA Atsushi"]
-  gem.extensions = "ext/lz4-ruby/extconf.rb"
+  gem.extensions = "ext/lz4ruby/extconf.rb"
   # dependencies defined in Gemfile
+
+  Rake::ExtensionTask.new("lz4ruby", gem) do |ext|
+    ext.cross_compile = true
+    ext.cross_platform = "x86-mingw32"
+  end
 end
 Jeweler::RubygemsDotOrgTasks.new
 

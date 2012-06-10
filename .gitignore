@@ -49,9 +49,10 @@ pkg
 #*.rbc
 
 ext/Makefile
-ext/lz4-ruby/lz4.?
-ext/lz4-ruby/lz4hc.?
+ext/lz4ruby/lz4.?
+ext/lz4ruby/lz4hc.?
 *.o
 *.so
 Gemfile.lock
 benchmarking/testdata/
+tmp/
