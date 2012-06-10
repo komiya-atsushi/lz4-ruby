@@ -9,10 +9,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["KOMIYA Atsushi"]
-  s.date = "2012-06-06"
+  s.date = "2012-06-10"
   s.description = "Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm."
   s.email = "komiya.atsushi@gmail.com"
-  s.extensions = ["ext/extconf.rb"]
+  s.extensions = ["ext/lz4-ruby/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -29,8 +29,8 @@ Gem::Specification.new do |s|
     "benchmarking/compressor_lz4.rb",
     "benchmarking/compressor_lzo.rb",
     "benchmarking/compressor_snappy.rb",
-    "ext/extconf.rb",
-    "ext/lz4ruby.c",
+    "ext/lz4-ruby/extconf.rb",
+    "ext/lz4-ruby/lz4ruby.c",
     "lib/lz4-ruby.rb",
     "lz4-ruby.gemspec",
     "test/helper.rb",
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/komiya-atsushi/lz4-ruby"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.23"
+  s.rubygems_version = "1.8.24"
   s.summary = "Ruby bindings for LZ4 (Extremely Fast Compression algorithm)."
 
   if s.respond_to? :specification_version then
@@ -50,17 +50,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, ["~> 1.1.4"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_development_dependency(%q<rake-compiler>, [">= 0"])
     else
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, ["~> 1.1.4"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_dependency(%q<rake-compiler>, [">= 0"])
     end
   else
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, ["~> 1.1.4"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+    s.add_dependency(%q<rake-compiler>, [">= 0"])
   end
 end
 

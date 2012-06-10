@@ -22,7 +22,7 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm.}
   gem.email = "komiya.atsushi@gmail.com"
   gem.authors = ["KOMIYA Atsushi"]
-  gem.extensions = "ext/extconf.rb"
+  gem.extensions = "ext/lz4-ruby/extconf.rb"
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
