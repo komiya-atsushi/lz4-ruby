@@ -13,8 +13,7 @@ end
 require 'rake'
 
 require 'jeweler'
-require 'rake/extensiontask'
-Jeweler::Tasks.new do |gem|
+jeweler_tasks = Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "lz4-ruby"
   gem.homepage = "http://github.com/komiya-atsushi/lz4-ruby"
@@ -23,15 +22,14 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Ruby bindings for LZ4. LZ4 is a very fast lossless compression algorithm.}
   gem.email = "komiya.atsushi@gmail.com"
   gem.authors = ["KOMIYA Atsushi"]
-  gem.extensions = "ext/lz4ruby/extconf.rb"
+  gem.extensions = ["ext/lz4ruby/extconf.rb"]
+  gem.files.exclude("*.sh")
   # dependencies defined in Gemfile
-
-  Rake::ExtensionTask.new("lz4ruby", gem) do |ext|
-    ext.cross_compile = true
-    ext.cross_platform = "x86-mingw32"
-  end
 end
 Jeweler::RubygemsDotOrgTasks.new
+
+$gemspec = jeweler_tasks.gemspec
+$gemspec.version = jeweler_tasks.jeweler.version
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
@@ -39,14 +37,6 @@ Rake::TestTask.new(:test) do |test|
   test.pattern = 'test/**/test_*.rb'
   test.verbose = true
 end
-
-#require 'rcov/rcovtask'
-#Rcov::RcovTask.new do |test|
-#  test.libs << 'test'
-#  test.pattern = 'test/**/test_*.rb'
-#  test.verbose = true
-#  test.rcov_opts << '--exclude "gems/*"'
-#end
 
 task :default => :test
 
@@ -58,4 +48,43 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "lz4-ruby #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+require 'rake/extensiontask'
+Rake::ExtensionTask.new("lz4ruby", $gemspec) do |ext|
+  ext.cross_compile = true
+  ext.cross_platform = ["x86-mingw32"]
+end
+
+Rake::Task.tasks.each do |task_name|
+  case task_name.to_s
+  when /^native/
+    task_name.prerequisites.unshift('fix_rake_compiler_gemspec_dump')
+  end
+end
+
+task :fix_rake_compiler_gemspec_dump do
+  %w{files extra_rdoc_files test_files}.each do |accessor|
+    $gemspec.send(accessor).instance_eval {
+      @exclude_procs = Array.new
+    }
+  end
+end
+
+task :gems do
+  sh "rake clean build:cross"
+  sh "rake clean build"
+end
+
+task "build:cross" => [:no_extconf,  :cross, :build] do
+  file = "pkg/lz4-ruby-#{get_version}.gem"
+  mv file, "#{file.ext}-x86-mingw32.gem"
+end
+
+task :no_extconf do
+    $gemspec.extensions = []
+end
+
+def get_version
+    `cat VERSION`.chomp
 end
