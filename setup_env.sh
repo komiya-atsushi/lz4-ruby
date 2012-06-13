@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Requirements:
+#   mingw32 (# sudo aptitude install mingw32 )
+#   rvm (# curl -L get.rvm.io | bash -s stable )
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 rvm install 1.8.7
