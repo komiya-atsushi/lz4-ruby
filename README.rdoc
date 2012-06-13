@@ -34,7 +34,6 @@ Tested on VirtualBox VM : 2-core / 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 == TODO
 
 * Write API documents.
-* Support mswin32 platform.
 
 == Copyright
 
