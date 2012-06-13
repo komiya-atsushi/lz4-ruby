@@ -19,7 +19,7 @@ end
   "lz4.h",
   "lz4hc.c",
   "lz4hc.h" ].each do |filename|
-  exit if !download_from_web(filename)
+#  exit if !download_from_web(filename)
 end
 
 $CFLAGS += " -Wall "

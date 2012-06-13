@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+LZ4_REV_NO=66
+URL=http://lz4.googlecode.com/svn-history/r${LZ4_REV_NO}/trunk
+
+# get lz4 sources from web
+rm ext/lz4ruby/lz4.c; wget -P ext/lz4ruby/ $URL/lz4.c
+rm ext/lz4ruby/lz4.h; wget -P ext/lz4ruby/ $URL/lz4.h
+rm ext/lz4ruby/lz4hc.c; wget -P ext/lz4ruby/ $URL/lz4hc.c
+rm ext/lz4ruby/lz4hc.h; wget -P ext/lz4ruby/ $URL/lz4hc.h
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 rm -rf tmp/*
