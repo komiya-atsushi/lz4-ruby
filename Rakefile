@@ -81,17 +81,15 @@ task :gems do
   sh "rake clean build"
 end
 
-task "build:cross" => [:no_extconf, :with_native_module, :cross, :build] do
+task "build:cross" => [:modify_gemspec_for_windows, :cross, :build] do
   file = "pkg/lz4-ruby-#{get_version}.gem"
   mv file, "#{file.ext}-x86-mingw32.gem"
 end
 
-task :no_extconf do
+task :modify_gemspec_for_windows do
   $gemspec.extensions = []
-end
-
-task :with_native_module do
   $gemspec.files.include("lib/?.?/*.so")
+  $gemspec.platform = "x86-mingw32"
 end
 
 def get_version
