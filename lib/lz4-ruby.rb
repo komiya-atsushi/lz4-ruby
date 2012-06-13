@@ -1,4 +1,10 @@
-require 'lz4ruby'
+if /(mswin|mingw)/ =~ RUBY_PLATFORM
+  /(\d+\.\d+)/ =~ RUBY_VERSION
+  ver = $1
+  require "#{ver}/lz4ruby.so"
+else
+  require 'lz4ruby'
+end
 
 class LZ4
   def self.compress(source, src_size = nil)
