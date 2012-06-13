@@ -48,11 +48,18 @@ pkg
 # For rubinius:
 #*.rbc
 
+# LZ4 sources and Makefile
 ext/Makefile
 ext/lz4ruby/lz4.?
 ext/lz4ruby/lz4hc.?
+
+# binaries
 *.o
 *.so
+
+# Development, test and temporaries
+Gemfile
 Gemfile.lock
+*.gemspec
 benchmarking/testdata/
 tmp/

@@ -23,7 +23,12 @@ jeweler_tasks = Jeweler::Tasks.new do |gem|
   gem.email = "komiya.atsushi@gmail.com"
   gem.authors = ["KOMIYA Atsushi"]
   gem.extensions = ["ext/lz4ruby/extconf.rb"]
+  
   gem.files.exclude("*.sh")
+  
+  gem.files.include("ext/lz4ruby/*.c")
+  gem.files.include("ext/lz4ruby/*.h")
+  
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
@@ -90,5 +95,5 @@ task :with_native_module do
 end
 
 def get_version
-    `cat VERSION`.chomp
+  `cat VERSION`.chomp
 end
