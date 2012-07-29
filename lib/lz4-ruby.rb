@@ -7,17 +7,66 @@ else
 end
 
 class LZ4
-  def self.compress(source, src_size = nil)
-    src_size = source.length if src_size == nil
-    return LZ4Native::compress(source, src_size)
+  def self.compress(input, in_size = nil)
+    return _compress(input, in_size, false)
   end
 
-  def self.compressHC(source, src_size = nil)
-    src_size = source.length if src_size == nil
-    return LZ4Native::compressHC(source, src_size)
+  def self.compressHC(input, in_size = nil)
+    return _compress(input, in_size, true)
+  end
+  
+  def self._compress(input, in_size, high_compression)
+    in_size = input.length if in_size == nil
+    header = encode_varbyte(in_size)
+
+    if high_compression
+      return LZ4Internal.compressHC(header, input, in_size)
+    else
+      return LZ4Internal.compress(header, input, in_size)
+    end
   end
 
-  def self.uncompress(source)
-    return LZ4Native::uncompress(source)
+  def self.uncompress(input, in_size = nil)
+    in_size = input.length if in_size == nil
+    out_size, varbyte_len = decode_varbyte(input)
+
+    if out_size < 0 || varbyte_len < 0
+      raise "Compressed data is maybe corrupted"
+    end
+    
+    return LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
+  end
+
+  def self.encode_varbyte(val)
+    varbytes = []
+
+    loop do
+      byte = val & 0x7f
+      val >>= 7
+
+      if val == 0
+        varbytes.push(byte)
+        break
+      else
+        varbytes.push(byte | 0x80)
+      end
+    end
+
+    return varbytes.pack("C*")
+  end
+
+  def self.decode_varbyte(text)
+    len = [text.length, 5].min
+    bytes = text[0, len].unpack("C*")
+
+    varbyte_len = 0
+    val = 0
+    bytes.each do |b|
+      val |= (b & 0x7f) << (7 * varbyte_len)
+      varbyte_len += 1
+      return val, varbyte_len if b & 0x80 == 0
+    end
+
+    return -1, -1
   end
 end

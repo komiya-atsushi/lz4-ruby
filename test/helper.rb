@@ -15,7 +15,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'ext/lz4ruby'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 build_native = <<EOS
-cd ext/lz4-ruby
+cd ext/lz4ruby
 ruby extconf.rb
 make clean
 make
