@@ -11,6 +11,8 @@ rm ext/lz4ruby/lz4hc.h; wget -P ext/lz4ruby/ $URL/lz4hc.h
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
+rm -f ext/lz4ruby/*.o
+rm -f ext/lz4ruby/*.so
 rm -rf tmp/*
 rm -rf pkg/*
 
