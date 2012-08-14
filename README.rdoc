@@ -33,6 +33,7 @@ Tested on VirtualBox VM : 2-core / 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 
 == TODO
 
+* replace calloc() with xalloc() in lz4hc.c
 * Write API documents.
 
 == Copyright
