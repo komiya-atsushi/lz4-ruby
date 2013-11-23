@@ -86,10 +86,22 @@ task "build:cross" => [:modify_gemspec_for_windows, :cross, :build] do
   mv file, "#{file.ext}-x86-mingw32.gem"
 end
 
+task "build:jruby" => [:modify_gemspec_for_jruby, :compile_jruby, :build]
+
 task :modify_gemspec_for_windows do
   $gemspec.extensions = []
   $gemspec.files.include("lib/?.?/*.so")
   $gemspec.platform = "x86-mingw32"
+end
+
+task :modify_gemspec_for_jruby do
+  $gemspec.extensions = []
+  $gemspec.files.include("lib/?.?/*.jar")
+  $gemspec.platform = "java"
+end
+
+task :compile_jruby do
+  system 'mvn package'
 end
 
 def get_version

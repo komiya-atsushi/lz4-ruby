@@ -2,6 +2,8 @@ if /(mswin|mingw)/ =~ RUBY_PLATFORM
   /(\d+\.\d+)/ =~ RUBY_VERSION
   ver = $1
   require "#{ver}/lz4ruby.so"
+elsif RUBY_PLATFORM == 'java'
+  require 'lz4-jruby'
 else
   require 'lz4ruby'
 end

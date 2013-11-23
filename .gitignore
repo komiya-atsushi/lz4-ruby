@@ -15,6 +15,10 @@ doc
 # jeweler generated
 pkg
 
+# JRuby ext build artifacts
+target
+dependency-reduced-pom.xml
+
 # Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore: 
 #
 # * Create a file at ~/.gitignore
@@ -56,6 +60,7 @@ ext/lz4ruby/lz4hc.?
 # binaries
 *.o
 *.so
+*.jar
 
 # Development, test and temporaries
 Gemfile
