@@ -8,7 +8,6 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 require 'test/unit'
-require 'shoulda'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'ext/lz4ruby'))
@@ -24,5 +23,11 @@ EOS
 
 require 'lz4-ruby'
 
-class Test::Unit::TestCase
+def generate_random_bytes(len)
+  result = []
+  len.times do |t|
+    result << rand(256)
+  end
+  return result.pack("C*")
 end
+
