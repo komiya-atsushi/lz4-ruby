@@ -41,6 +41,10 @@ Tested on VirtualBox VM : 2-core / 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 Copyright (c) 2012 KOMIYA Atsushi.
 See LICENSE.txt for further details.
 
+== Contributors
+
+* Charles Oliver Nutter <headius at headius.com>
+
 == About LZ4
 
 This Rubygem includes LZ4 codes written by Yann Collet.
