@@ -15,8 +15,14 @@ rm -f ext/lz4ruby/*.o
 rm -f ext/lz4ruby/*.so
 rm -rf tmp/*
 rm -rf pkg/*
+rm -rf target/*
 
-rm -rf lib/1.8 lib/1.9
+rm -rf lib/1.8 lib/1.9 lib/*.jar
+
+# compile & build .jar
+rvm use jruby --default
+rvm gemset use lz4-ruby
+bundle exec rake build:jruby
 
 # compile 1.8.7 native extensions for MinGW
 rvm use 1.8.7 --default
