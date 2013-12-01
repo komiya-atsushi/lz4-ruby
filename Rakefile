@@ -79,7 +79,6 @@ end
 
 task "build:cross" => [:modify_gemspec_for_windows, :cross, :build] do
   file = "pkg/lz4-ruby-#{get_version}.gem"
-  mv file, "#{file.ext}-x86-mingw32.gem"
 end
 
 task "build:jruby" => [:modify_gemspec_for_jruby, :compile_jruby, :build]
