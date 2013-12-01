@@ -92,7 +92,7 @@ end
 
 task :modify_gemspec_for_jruby do
   $gemspec.extensions = []
-  $gemspec.files.include("lib/?.?/*.jar")
+  $gemspec.files.include("lib/*.jar")
   $gemspec.platform = "java"
 end
 
