@@ -6,19 +6,23 @@
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-rvm install 1.8.7
-rvm use 1.8.7 --default
-rvm gemset create lz4-ruby
-rvm gemset use lz4-ruby
-gem install bundler -v 1.0.22
-bundle install
-bundle exec rake-compiler cross-ruby VERSION=1.8.7-p358 EXTS=--without-extensions
+function setup_ruby_env() {
+    VER=$1
 
-rvm install 1.9.3
-rvm use 1.9.3 --default
-rvm gemset create lz4-ruby
-rvm gemset use lz4-ruby
-gem install bundler -v 1.0.22
-bundle install
-bundle exec rake-compiler cross-ruby VERSION=1.9.3-p194 EXTS=--without-extensions
+    rvm install ${VER}
+    rvm use ${VER} --default
+    rvm gemset create lz4-ruby
+    rvm gemset use lz4-ruby
+    gem install bundler
+    bundle install
+}
 
+VER_MRI_18=`rvm list known_strings | grep 1.8.7-p | sed -e s/ruby-//`
+VER_MRI_19=`rvm list known_strings | grep 1.9.3-p | sed -e s/ruby-//`
+VER_JRUBY=`rvm list known_strings | grep jruby-1.7.8`
+
+setup_ruby_env ${VER_MRI_18}
+bundle exec rake-compiler cross-ruby VERSION=${VER_MRI_18} EXTS=--without-extensions
+setup_ruby_env ${VER_MRI_19}
+bundle exec rake-compiler cross-ruby VERSION=${VER_MRI_19} EXTS=--without-extensions
+setup_ruby_env ${VER_JRUBY}
