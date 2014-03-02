@@ -39,6 +39,18 @@ class LZ4
     return LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
   end
 
+  def self.raw_compress(*args)
+    LZ4Internal.raw_compress(*args)
+  end
+
+  def self.raw_compressHC(*args)
+    LZ4Internal.raw_compressHC(*args)
+  end
+
+  def self.raw_uncompress(*args)
+    LZ4Internal.raw_uncompress(*args)
+  end
+
   def self.encode_varbyte(val)
     varbytes = []
 
