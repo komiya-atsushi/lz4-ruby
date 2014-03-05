@@ -17,6 +17,10 @@ describe "LZ4::compress" do
     compressed = LZ4.compressHC(text)
     uncompressed = LZ4.uncompress(compressed)
 
+    it "should compress smaller than original text" do
+      expect(compressed.size).to be < text.length
+    end
+
     it "should be able to uncompress" do
       expect(uncompressed).to eql(text)
     end
