@@ -83,4 +83,33 @@ class LZ4
 
     return -1, -1
   end
+
+  class Raw
+    def self.compress(input, options = {})
+      input_size = options[:input_size]
+      input_size = input.length if input_size == nil
+
+      dest = options[:dest]
+
+      max_output_size = options[:max_output_size]
+      if max_output_size == nil
+        if dest != nil
+          max_output_size = dest.length
+        else
+          max_output_size = input_size + (input_size / 255) + 16 if dest == nil
+        end
+      end
+
+      result = LZ4Internal.compress_raw(input, input_size, dest, max_output_size)
+
+      if result[1] == 0
+        raise LZ4Error, "compression failed"
+      end
+
+      return result[0], result[1]
+    end
+  end
+end
+
+class LZ4Error < StandardError
 end

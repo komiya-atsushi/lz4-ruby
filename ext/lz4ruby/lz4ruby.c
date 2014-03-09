@@ -44,6 +44,79 @@ static VALUE compress_internal(CompressFunc compressor, VALUE header, VALUE inpu
   return result;
 }
 
+static VALUE compress_raw_internal(
+    CompressLimitedOutputFunc compressor,
+    VALUE _input,
+    VALUE _input_size,
+    VALUE _output_buffer,
+    VALUE _max_output_size) {
+
+  const char *src_p;
+  int src_size;
+
+  VALUE output_buffer;
+  char *buf_p;
+
+  int max_output_size;
+
+  int comp_size;
+
+
+  Check_Type(_input, T_STRING);
+  src_p = RSTRING_PTR(_input);
+  src_size = NUM2INT(_input_size);
+
+  if (NIL_P(_output_buffer)) {
+    output_buffer = rb_str_new(NULL, _max_output_size);
+
+  } else {
+    output_buffer = _output_buffer;
+  }
+
+  buf_p = RSTRING_PTR(output_buffer);
+
+  max_output_size = NUM2INT(_max_output_size);
+
+  comp_size = compressor(src_p, buf_p, src_size, max_output_size);
+
+  if (NIL_P(_output_buffer)) {
+    rb_str_resize(output_buffer, comp_size);
+  }
+
+  return rb_ary_new3(2, output_buffer, INT2NUM(comp_size));
+}
+
+static VALUE lz4internal_compress_raw(
+    VALUE self,
+    VALUE _input,
+    VALUE _input_size,
+    VALUE _output_buffer,
+    VALUE _max_output_size)
+  {
+    return compress_raw_internal(
+        LZ4_compress_limitedOutput,
+	_input,
+	_input_size,
+	_output_buffer,
+	_max_output_size);
+}
+
+static VALUE lz4internal_compressHC_raw(
+    VALUE self,
+    VALUE _input,
+    VALUE _input_size,
+    VALUE _output_buffer,
+    VALUE _max_output_size)
+  {
+    return compress_raw_internal(
+        LZ4_compressHC_limitedOutput,
+	_input,
+	_input_size,
+	_output_buffer,
+	_max_output_size);
+}
+					
+
 static VALUE lz4internal_compress(VALUE self, VALUE header, VALUE input, VALUE in_size) {
   return compress_internal(LZ4_compress, header, input, in_size);
 }
@@ -243,6 +316,9 @@ void Init_lz4ruby(void) {
   rb_define_module_function(lz4internal, "raw_compress", lz4internal_raw_compress, -1);
   rb_define_module_function(lz4internal, "raw_compressHC", lz4internal_raw_compressHC, -1);
   rb_define_module_function(lz4internal, "raw_uncompress", lz4internal_raw_uncompress, -1);
+
+  rb_define_module_function(lz4internal, "compress_raw", lz4internal_compress_raw, 4);
+  rb_define_module_function(lz4internal, "compressHC_raw", lz4internal_compressHC_raw, 4);
 
   lz4_error = rb_define_class_under(lz4internal, "Error", rb_eStandardError);
 }

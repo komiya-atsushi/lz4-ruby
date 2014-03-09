@@ -1,6 +1,6 @@
 require 'mkmf'
 
-$CFLAGS += " -Wall "
+$CFLAGS += " -Wall -std=c99 "
 
 create_makefile('lz4ruby')
 
