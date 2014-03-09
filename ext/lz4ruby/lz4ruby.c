@@ -54,7 +54,7 @@ static VALUE compress_raw_internal(
   const char *src_p;
   int src_size;
 
-  VALUE output_buffer;
+  int needs_resize;
   char *buf_p;
 
   int max_output_size;
@@ -67,23 +67,24 @@ static VALUE compress_raw_internal(
   src_size = NUM2INT(_input_size);
 
   if (NIL_P(_output_buffer)) {
-    output_buffer = rb_str_new(NULL, _max_output_size);
+    needs_resize = 1;
+    _output_buffer = rb_str_new(NULL, _max_output_size);
 
   } else {
-    output_buffer = _output_buffer;
+    needs_resize = 0;
   }
 
-  buf_p = RSTRING_PTR(output_buffer);
+  buf_p = RSTRING_PTR(_output_buffer);
 
   max_output_size = NUM2INT(_max_output_size);
 
   comp_size = compressor(src_p, buf_p, src_size, max_output_size);
 
-  if (NIL_P(_output_buffer)) {
-    rb_str_resize(output_buffer, comp_size);
+  if (needs_resize) {
+    rb_str_resize(_output_buffer, comp_size);
   }
 
-  return rb_ary_new3(2, output_buffer, INT2NUM(comp_size));
+  return rb_ary_new3(2, _output_buffer, INT2NUM(comp_size));
 }
 
 static VALUE lz4internal_compress_raw(

@@ -87,7 +87,14 @@ class LZ4
   class Raw
     def self.compress(input, options = {})
       input_size = options[:input_size]
-      input_size = input.length if input_size == nil
+      if input_size == nil
+        input_size = input.length
+
+      else
+        if input.length < input_size
+          raise ArgumentError, "`:input_size` (#{input_size}) must be less than or equal `input.length` (#{input.length})"
+        end
+      end
 
       dest = options[:dest]
 
@@ -97,6 +104,11 @@ class LZ4
           max_output_size = dest.length
         else
           max_output_size = input_size + (input_size / 255) + 16 if dest == nil
+        end
+
+      else
+        if dest != nil && dest.length < max_output_size
+          raise ArgumentError, "`:dest` buffer size (#{dest.length}) must be greater than or equal `:max_output_size` (#{max_output_size})"
         end
       end
 
