@@ -84,8 +84,18 @@ class LZ4
     return -1, -1
   end
 
+  
   class Raw
-    def self.compress(input, options = {})
+    def self.compress(source, options = {})
+      return _compress(source, false, options)
+    end
+
+    def self.compressHC(source, options = {})
+      return _compress(source, true, options)
+    end
+
+    private 
+    def self._compress(input, high_compression, options = {})
       input_size = options[:input_size]
       if input_size == nil
         input_size = input.length
@@ -112,7 +122,7 @@ class LZ4
         end
       end
 
-      result = LZ4Internal.compress_raw(input, input_size, dest, max_output_size)
+      result = high_compression ? LZ4Internal.compressHC_raw(input, input_size, dest, max_output_size) : LZ4Internal.compress_raw(input, input_size, dest, max_output_size)
 
       if result[1] == 0
         raise LZ4Error, "compression failed"
