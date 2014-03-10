@@ -86,10 +86,26 @@ class LZ4
 
   
   class Raw
+    # Compress `source` string and return compressed string and its length.
+    #
+    # @param [String] source string to be compressed
+    # @param [Hash] options
+    # @option options [Fixnum] :input_size length of source to compress (must be less than or equal to `source.length`)
+    # @option options [String] :dest output buffer which will receive compressed string
+    # @option options [Fixnum] :max_output_size acceptable maximum output size
+    # @return [String, Fixnum] compressed string and its length.
     def self.compress(source, options = {})
       return _compress(source, false, options)
     end
 
+    # Compress `source` string using High Compress Mode.
+    #
+    # @param [String] source string to be compressed
+    # @param [Hash] options
+    # @option options [Fixnum] :input_size length of source to compress (must be less than or equal to `source.length`)
+    # @option options [String] :dest output buffer which will receive compressed string
+    # @option options [Fixnum] :max_output_size acceptable maximum output size
+    # @return [String, Fixnum] compressed string and its length.
     def self.compressHC(source, options = {})
       return _compress(source, true, options)
     end
