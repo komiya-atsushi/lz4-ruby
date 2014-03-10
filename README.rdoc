@@ -33,7 +33,8 @@ Tested on VirtualBox VM : 2-core / 4GB RAM (Host : Core i5-2520M / 8GB RAM).
 
 == TODO
 
-* replace calloc() with xalloc() in lz4hc.c
+* Support raw data handling methods for JRuby.
+* Support streaming methods.
 * Write API documents.
 
 == Copyright
@@ -43,7 +44,8 @@ See LICENSE.txt for further details.
 
 == Contributors
 
-* Charles Oliver Nutter <headius at headius.com>
+* {Charles Oliver Nutter}[https://github.com/headius] <headius at headius.com>
+* dearblue[https://github.com/dearblue]
 
 == About LZ4
 
