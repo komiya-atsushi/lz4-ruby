@@ -1,0 +1,9 @@
+= ChangeLog
+
+== 0.3.0
+
+* Support raw data stream handling methods (but not worked in JRuby). 
+  * +LZ4.Raw.compress()+
+  * +LZ4.Raw.compressHC()+
+  * +LZ4.Raw.decompress()+
+* Rename +LZ4.uncompress()+ to +LZ4.decompress()+ .
