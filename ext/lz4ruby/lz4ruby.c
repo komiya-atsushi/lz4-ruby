@@ -80,7 +80,7 @@ static VALUE compress_raw_internal(
 
   comp_size = compressor(src_p, buf_p, src_size, max_output_size);
 
-  if (needs_resize) {
+  if (comp_size > 0 && needs_resize) {
     rb_str_resize(_output_buffer, comp_size);
   }
 
@@ -156,7 +156,6 @@ static VALUE lz4internal_uncompress(VALUE self, VALUE input, VALUE in_size, VALU
   return result;
 }
 
-// WORKING
 static VALUE lz4internal_decompress_raw(
     VALUE self,
     VALUE _input,
@@ -191,7 +190,7 @@ static VALUE lz4internal_decompress_raw(
   buf_p = RSTRING_PTR(_output_buffer);
   decomp_size = LZ4_decompress_safe(src_p, buf_p, src_size, max_output_size);
 
-  if (needs_resize) {
+  if (decomp_size > 0 && needs_resize) {
     rb_str_resize(_output_buffer, decomp_size);
   }
 

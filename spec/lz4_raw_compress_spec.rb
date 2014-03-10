@@ -33,7 +33,8 @@ describe "LZ4::Raw::compress" do
     end
     
     context "with input_size" do
-      context "of (#{input_size = 3}) less than input text length (#{text.length})" do
+      context "(3) which is less than input text length (#{text.length})" do
+        input_size = 3
         compressed, size = LZ4::Raw.compress(text, :input_size => input_size)
 
         aaa_ex = [0x30, 0x61, 0x61, 0x61]
@@ -48,23 +49,29 @@ describe "LZ4::Raw::compress" do
         end
       end
 
-      context "of (#{input_size = 30}) greater than input text length (#{text.length})" do
+      context "(30) which is greater than input text length (#{text.length})" do
+        input_size = 30
         it "should be thrown ArgumentError" do
           expect {
             compressed, size = LZ4::Raw.compress(text, :input_size => input_size)
-          }.to raise_error(ArgumentError, "`:input_size` (30) must be less than or equal `input.length` (20)")
+          }.to raise_error(ArgumentError, "`:input_size` (30) must be less than or equal `source.length` (20)")
         end
       end
     end
 
     context "with output buffer" do
-      context "enough buffer size (#{out_buf_size = 10})" do
+      context "enough buffer size: 10" do
+        out_buf_size = 10
         out_buf = " " * out_buf_size
 
         compressed, size = LZ4::Raw.compress(text, :dest => out_buf)
 
         it "should be compressed to length #{expected.size}" do
           expect(size).to eql(expected.size)
+        end
+
+        it "should be unchanged output buffer size" do
+          expect(compressed.size).to eql(out_buf_size)
         end
 
         it "should be compressed into '#{expected}'" do
@@ -76,7 +83,8 @@ describe "LZ4::Raw::compress" do
         end
       end
 
-      context "poor buffer size (#{out_buf_size = 3})" do
+      context "poor buffer size: 3" do
+        out_buf_size = 3
         out_buf = " " * out_buf_size
 
         it "shoud be thrown LZ4Error" do
@@ -88,7 +96,8 @@ describe "LZ4::Raw::compress" do
     end
 
     context "with max_output_size" do
-      context "enough max_output_size: #{max_output_size = 10}" do
+      context "enough max_output_size: 10" do
+        max_output_size = 10
         compressed, size = LZ4::Raw.compress(text, :max_output_size => max_output_size)
 
         it "should be compressed to length #{expected.size}" do
@@ -100,7 +109,8 @@ describe "LZ4::Raw::compress" do
         end
       end
 
-      context "poor max_output_size: #{max_output_size = 3}" do
+      context "poor max_output_size: 3" do
+        max_output_size = 3
         it "shoud be thrown LZ4Error" do
           expect {
             compressed, size = LZ4::Raw.compress(text, :max_output_size => max_output_size)
@@ -110,10 +120,27 @@ describe "LZ4::Raw::compress" do
     end
 
     context "with output buffer and max_output_size" do
-      out_buf = " " * 10
-      max_output_size = 20
-      
-      context "when size of output buffer (#{out_buf.size}) which is less than max_output_size (#{max_output_size})" do
+      context "when size of output buffer: 30, which is greater than max_output_size: 20" do
+        out_buf_size = 30
+        max_output_size = 20
+        out_buf = " " * out_buf_size
+
+        compressed, size = LZ4::Raw.compress(text, :dest => out_buf, :max_output_size => max_output_size)
+
+        it "should be compressed to length #{expected.size}" do
+          expect(size).to eql(expected.size)
+        end
+
+        it "should be compressed into '#{expected}'" do
+          expect(compressed[0, size]).to eql(expected.pack("C*"))
+        end
+      end
+
+      context "when size of output buffer: 10, which is less than max_output_size: 20" do
+        out_buf_size = 10
+        max_output_size = 20
+        out_buf = " " * out_buf_size
+
         it "should be thrown ArgumentError" do
           expect {
             compressed, size = LZ4::Raw.compress(text, :dest => out_buf, :max_output_size => max_output_size)
