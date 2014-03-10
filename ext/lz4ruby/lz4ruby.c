@@ -197,6 +197,8 @@ static VALUE lz4internal_decompress_raw(
   return rb_ary_new3(2, _output_buffer, INT2NUM(decomp_size));
 }
 
+#if 0
+
 static inline void lz4internal_raw_compress_scanargs(int argc, VALUE *argv, VALUE *src, VALUE *dest, size_t *srcsize, size_t *maxsize) {
   switch (argc) {
   case 1:
@@ -348,6 +350,8 @@ static VALUE lz4internal_raw_uncompress(int argc, VALUE *argv, VALUE lz4i) {
   return dest;
 }
 
+#endif
+
 void Init_lz4ruby(void) {
   lz4internal = rb_define_module("LZ4Internal");
 
@@ -355,9 +359,9 @@ void Init_lz4ruby(void) {
   rb_define_module_function(lz4internal, "compressHC", lz4internal_compressHC, 3);
   rb_define_module_function(lz4internal, "uncompress", lz4internal_uncompress, 4);
 
-  rb_define_module_function(lz4internal, "raw_compress", lz4internal_raw_compress, -1);
-  rb_define_module_function(lz4internal, "raw_compressHC", lz4internal_raw_compressHC, -1);
-  rb_define_module_function(lz4internal, "raw_uncompress", lz4internal_raw_uncompress, -1);
+  //rb_define_module_function(lz4internal, "raw_compress", lz4internal_raw_compress, -1);
+  //rb_define_module_function(lz4internal, "raw_compressHC", lz4internal_raw_compressHC, -1);
+  //rb_define_module_function(lz4internal, "raw_uncompress", lz4internal_raw_uncompress, -1);
 
   rb_define_module_function(lz4internal, "compress_raw", lz4internal_compress_raw, 4);
   rb_define_module_function(lz4internal, "compressHC_raw", lz4internal_compressHC_raw, 4);
