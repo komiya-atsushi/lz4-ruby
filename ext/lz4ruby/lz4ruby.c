@@ -156,6 +156,48 @@ static VALUE lz4internal_uncompress(VALUE self, VALUE input, VALUE in_size, VALU
   return result;
 }
 
+// WORKING
+static VALUE lz4internal_decompress_raw(
+    VALUE self,
+    VALUE _input,
+    VALUE _input_size,
+    VALUE _output_buffer,
+    VALUE _max_output_size) {
+
+  const char *src_p;
+  int src_size;
+
+  int max_output_size;
+
+  int needs_resize;
+  char *buf_p;
+
+  int decomp_size;
+
+  Check_Type(_input, T_STRING);
+  src_p = RSTRING_PTR(_input);
+  src_size = NUM2INT(_input_size);
+
+  max_output_size = NUM2INT(_max_output_size);
+
+  if (NIL_P(_output_buffer)) {
+    needs_resize = 1;
+    _output_buffer = rb_str_new(NULL, max_output_size);
+
+  } else {
+    needs_resize = 0;
+  }
+
+  buf_p = RSTRING_PTR(_output_buffer);
+  decomp_size = LZ4_decompress_safe(src_p, buf_p, src_size, max_output_size);
+
+  if (needs_resize) {
+    rb_str_resize(_output_buffer, decomp_size);
+  }
+
+  return rb_ary_new3(2, _output_buffer, INT2NUM(decomp_size));
+}
+
 static inline void lz4internal_raw_compress_scanargs(int argc, VALUE *argv, VALUE *src, VALUE *dest, size_t *srcsize, size_t *maxsize) {
   switch (argc) {
   case 1:
@@ -320,6 +362,7 @@ void Init_lz4ruby(void) {
 
   rb_define_module_function(lz4internal, "compress_raw", lz4internal_compress_raw, 4);
   rb_define_module_function(lz4internal, "compressHC_raw", lz4internal_compressHC_raw, 4);
+  rb_define_module_function(lz4internal, "decompress_raw", lz4internal_decompress_raw, 4);
 
   lz4_error = rb_define_class_under(lz4internal, "Error", rb_eStandardError);
 }
