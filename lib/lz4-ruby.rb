@@ -17,6 +17,23 @@ class LZ4
     return _compress(input, in_size, true)
   end
   
+  def self.decompress(input, in_size = nil)
+    in_size = input.length if in_size == nil
+    out_size, varbyte_len = decode_varbyte(input)
+
+    if out_size < 0 || varbyte_len < 0
+      raise "Compressed data is maybe corrupted"
+    end
+    
+    return LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
+  end
+
+  # @deprecated Use {#decompress} and will be removed.
+  def self.uncompress(input, in_size = nil)
+    return decompress(input, in_size)
+  end
+
+  private
   def self._compress(input, in_size, high_compression)
     in_size = input.length if in_size == nil
     header = encode_varbyte(in_size)
@@ -28,29 +45,7 @@ class LZ4
     end
   end
 
-  def self.uncompress(input, in_size = nil)
-    in_size = input.length if in_size == nil
-    out_size, varbyte_len = decode_varbyte(input)
-
-    if out_size < 0 || varbyte_len < 0
-      raise "Compressed data is maybe corrupted"
-    end
-    
-    return LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
-  end
-
-  def self.raw_compress(*args)
-    LZ4Internal.raw_compress(*args)
-  end
-
-  def self.raw_compressHC(*args)
-    LZ4Internal.raw_compressHC(*args)
-  end
-
-  def self.raw_uncompress(*args)
-    LZ4Internal.raw_uncompress(*args)
-  end
-
+  private
   def self.encode_varbyte(val)
     varbytes = []
 
@@ -69,6 +64,7 @@ class LZ4
     return varbytes.pack("C*")
   end
 
+  private
   def self.decode_varbyte(text)
     len = [text.length, 5].min
     bytes = text[0, len].unpack("C*")
@@ -84,9 +80,9 @@ class LZ4
     return -1, -1
   end
 
-  
+  # Handles LZ4 native data stream (without any additional headers).
   class Raw
-    # Compress `source` string.
+    # Compresses `source` string.
     #
     # @param [String] source string to be compressed
     # @param [Hash] options
@@ -98,7 +94,7 @@ class LZ4
       return _compress(source, false, options)
     end
 
-    # Compress `source` string using High Compress Mode.
+    # Compresses `source` string using High Compress Mode.
     #
     # @param [String] source string to be compressed
     # @param [Hash] options
@@ -152,7 +148,7 @@ class LZ4
       return result[0], result[1]
     end
 
-    # Decompress `source` compressed string.
+    # Decompresses `source` compressed string.
     #
     # @param [String] source
     # @param [Fixnum] max_output_size
