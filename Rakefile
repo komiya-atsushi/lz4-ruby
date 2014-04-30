@@ -77,7 +77,7 @@ task :gems do
   sh "rake clean build"
 end
 
-task "build:cross" => [:modify_gemspec_for_windows, :cross, :build] do
+task "build:cross" => [:modify_gemspec_for_windows, :build] do
   file = "pkg/lz4-ruby-#{get_version}.gem"
 end
 
