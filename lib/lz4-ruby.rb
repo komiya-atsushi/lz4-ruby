@@ -17,15 +17,18 @@ class LZ4
     return _compress(input, in_size, true)
   end
   
-  def self.decompress(input, in_size = nil)
-    in_size = input.length if in_size == nil
+  def self.decompress(input, in_size = nil, encoding = nil)
+    in_size = input.bytesize if in_size == nil
     out_size, varbyte_len = decode_varbyte(input)
 
     if out_size < 0 || varbyte_len < 0
       raise "Compressed data is maybe corrupted"
     end
     
-    return LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
+    result = LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
+    result.force_encoding(encoding) if encoding != nil
+
+    return result
   end
 
   # @deprecated Use {#decompress} and will be removed.
@@ -35,7 +38,7 @@ class LZ4
 
   private
   def self._compress(input, in_size, high_compression)
-    in_size = input.length if in_size == nil
+    in_size = input.bytesize if in_size == nil
     header = encode_varbyte(in_size)
 
     if high_compression
@@ -66,7 +69,7 @@ class LZ4
 
   private
   def self.decode_varbyte(text)
-    len = [text.length, 5].min
+    len = [text.bytesize, 5].min
     bytes = text[0, len].unpack("C*")
 
     varbyte_len = 0
@@ -86,7 +89,7 @@ class LZ4
     #
     # @param [String] source string to be compressed
     # @param [Hash] options
-    # @option options [Fixnum] :input_size length of source to compress (must be less than or equal to `source.length`)
+    # @option options [Fixnum] :input_size byte size of source to compress (must be less than or equal to `source.bytesize`)
     # @option options [String] :dest output buffer which will receive compressed string
     # @option options [Fixnum] :max_output_size acceptable maximum output size
     # @return [String, Fixnum] compressed string and its length.
@@ -98,7 +101,7 @@ class LZ4
     #
     # @param [String] source string to be compressed
     # @param [Hash] options
-    # @option options [Fixnum] :input_size length of source to compress (must be less than or equal to `source.length`)
+    # @option options [Fixnum] :input_size byte size of source to compress (must be less than or equal to `source.bytesize`)
     # @option options [String] :dest output buffer which will receive compressed string
     # @option options [Fixnum] :max_output_size acceptable maximum output size
     # @return [String, Fixnum] compressed string and its length.
@@ -106,15 +109,15 @@ class LZ4
       return _compress(source, true, options)
     end
 
-    private 
+    private
     def self._compress(source, high_compression, options = {})
       input_size = options[:input_size]
       if input_size == nil
-        input_size = source.length
+        input_size = source.bytesize
 
       else
-        if source.length < input_size
-          raise ArgumentError, "`:input_size` (#{input_size}) must be less than or equal `source.length` (#{source.length})"
+        if source.bytesize < input_size
+          raise ArgumentError, "`:input_size` (#{input_size}) must be less than or equal `source.bytesize` (#{source.bytesize})"
         end
       end
 
@@ -123,14 +126,14 @@ class LZ4
       max_output_size = options[:max_output_size]
       if max_output_size == nil
         if dest != nil
-          max_output_size = dest.length
+          max_output_size = dest.bytesize
         else
           max_output_size = input_size + (input_size / 255) + 16 if dest == nil
         end
 
       else
-        if dest != nil && dest.length < max_output_size
-          raise ArgumentError, "`:dest` buffer size (#{dest.length}) must be greater than or equal `:max_output_size` (#{max_output_size})"
+        if dest != nil && dest.bytesize < max_output_size
+          raise ArgumentError, "`:dest` buffer size (#{dest.bytesize}) must be greater than or equal `:max_output_size` (#{max_output_size})"
         end
       end
 
@@ -153,24 +156,24 @@ class LZ4
     # @param [String] source
     # @param [Fixnum] max_output_size
     # @param [Hash] options
-    # @option options [Fixnum] :input_size length of source to decompress (must be less than or equal to `source.length`)
+    # @option options [Fixnum] :input_size byte size of source to decompress (must be less than or equal to `source.bytesize`)
     # @option options [String] :dest output buffer which will receive decompressed string
     # @return [String, Fixnum] decompressed string and its length.
     def self.decompress(source, max_output_size, options = {})
       input_size = options[:input_size]
       if input_size == nil
-        input_size = source.length
+        input_size = source.bytesize
 
       else
-        if source.length < input_size
-          raise ArgumentError, "`:input_size` (#{input_size}) must be less than or equal `source.length` (#{source.length})"
+        if source.bytesize < input_size
+          raise ArgumentError, "`:input_size` (#{input_size}) must be less than or equal `source.bytesize` (#{source.bytesize})"
         end
       end
 
       dest = options[:dest]
 
-      if dest != nil && dest.length < max_output_size
-        raise ArgumentError, "`:dest` buffer size (#{dest.length}) must be greater than or equal `max_output_size` (#{max_output_size})"
+      if dest != nil && dest.bytesize < max_output_size
+        raise ArgumentError, "`:dest` buffer size (#{dest.bytesize}) must be greater than or equal `max_output_size` (#{max_output_size})"
       end
 
       result = LZ4Internal.decompress_raw(source, input_size, dest, max_output_size)
