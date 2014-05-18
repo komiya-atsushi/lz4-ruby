@@ -5,24 +5,24 @@ describe "LZ4::compress" do
 
   context "give empty text" do
     compressed = LZ4.compress("")
-    uncompressed = LZ4.uncompress(compressed)
+    decompressed = LZ4.decompress(compressed)
 
-    it "should be able to uncompress" do
-      expect(uncompressed).to eql("")
+    it "should be able to decompress" do
+      expect(decompressed).to eql("")
     end
   end
 
   context "give long text" do
     text = "a" * 131073
     compressed = LZ4.compress(text)
-    uncompressed = LZ4.uncompress(compressed)
+    decompressed = LZ4.decompress(compressed)
 
     it "should be compressed length less than original text" do
       expect(compressed.size).to be < text.length
     end
 
-    it "should be able to uncompress" do
-      expect(uncompressed).to eql(text)
+    it "should be able to decompress" do
+      expect(decompressed).to eql(text)
     end
   end
 
@@ -32,9 +32,9 @@ describe "LZ4::compress" do
 
     context "give text of #{len} \"a\"'s" do
       compressed = LZ4.compress(text)
-      uncompressed = LZ4.uncompress(compressed)
-      it "should be able to uncompress" do
-        expect(uncompressed).to eql(text)
+      decompressed = LZ4.decompress(compressed)
+      it "should be able to decompress" do
+        expect(decompressed).to eql(text)
       end
     end
   end  
@@ -45,9 +45,9 @@ describe "LZ4::compress" do
 
     context "give text of #{len} bytes" do
       compressed = LZ4.compress(text)
-      uncompressed = LZ4.uncompress(compressed)
-      it "should be able to uncompress" do
-        expect(uncompressed).to eql(text)
+      decompressed = LZ4.decompress(compressed)
+      it "should be able to decompress" do
+        expect(decompressed).to eql(text)
       end
     end
   end  

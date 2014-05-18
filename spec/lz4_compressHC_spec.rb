@@ -5,24 +5,24 @@ describe "LZ4::compress" do
 
   context "give empty text" do
     compressed = LZ4.compressHC("")
-    uncompressed = LZ4.uncompress(compressed)
+    decompressed = LZ4.decompress(compressed)
 
-    it "should be able to uncompress" do
-      expect(uncompressed).to eql("")
+    it "should be able to decompress" do
+      expect(decompressed).to eql("")
     end
   end
 
   context "give long text" do
     text = "a" * 131073
     compressed = LZ4.compressHC(text)
-    uncompressed = LZ4.uncompress(compressed)
+    decompressed = LZ4.decompress(compressed)
 
     it "should be compressed length less than original text" do
-      expect(compressed.size).to be < text.length
+      expect(compressed.bytesize).to be < text.bytesize
     end
 
-    it "should be able to uncompress" do
-      expect(uncompressed).to eql(text)
+    it "should be able to decompress" do
+      expect(decompressed).to eql(text)
     end
   end
 
@@ -32,12 +32,12 @@ describe "LZ4::compress" do
 
     context "give text of #{len} \"a\"'s" do
       compressed = LZ4.compressHC(text)
-      uncompressed = LZ4.uncompress(compressed)
-      it "should be able to uncompress" do
-        expect(uncompressed).to eql(text)
+      decompressed = LZ4.decompress(compressed)
+      it "should be able to decompress" do
+        expect(decompressed).to eql(text)
       end
     end
-  end  
+  end
 
   LOOP_COUNT.times do |t|
     len = t + 1
@@ -45,10 +45,10 @@ describe "LZ4::compress" do
 
     context "give text of #{len} bytes" do
       compressed = LZ4.compressHC(text)
-      uncompressed = LZ4.uncompress(compressed)
-      it "should be able to uncompress" do
-        expect(uncompressed).to eql(text)
+      decompressed = LZ4.decompress(compressed)
+      it "should be able to decompress" do
+        expect(decompressed).to eql(text)
       end
     end
-  end  
+  end
 end
