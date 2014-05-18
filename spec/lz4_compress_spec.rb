@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require './spec/helper'
 
 describe "LZ4::compress" do
@@ -51,4 +53,13 @@ describe "LZ4::compress" do
       end
     end
   end  
+
+  context "give UTF-8 text" do
+    text = "いろはにほへと"
+    compressed = LZ4.compress(text)
+    decompressed = LZ4.decompress(compressed, compressed.bytesize, "UTF-8")
+    it "should be able to decompress" do
+      expect(decompressed).to eql(text)
+    end
+  end
 end
