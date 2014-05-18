@@ -55,7 +55,7 @@ describe "LZ4::Raw.decompress" do
         it "should be thrown ArgumentError" do
           expect {
             decompressed, size = LZ4::Raw.decompress(compressed.pack("C*"), 30, :input_size => input_size)
-          }.to raise_error ArgumentError, "`:input_size` (20) must be less than or equal `source.length` (#{compressed.length})"
+          }.to raise_error ArgumentError, "`:input_size` (20) must be less than or equal `source.bytesize` (#{compressed.length})"
         end
       end
     end

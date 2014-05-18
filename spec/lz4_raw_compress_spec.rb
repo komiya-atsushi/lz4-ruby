@@ -54,7 +54,7 @@ describe "LZ4::Raw::compress" do
         it "should be thrown ArgumentError" do
           expect {
             compressed, size = LZ4::Raw.compress(text, :input_size => input_size)
-          }.to raise_error(ArgumentError, "`:input_size` (30) must be less than or equal `source.length` (20)")
+          }.to raise_error(ArgumentError, "`:input_size` (30) must be less than or equal `source.bytesize` (20)")
         end
       end
     end
