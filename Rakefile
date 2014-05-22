@@ -28,6 +28,8 @@ jeweler_tasks = Jeweler::Tasks.new do |gem|
   
   gem.files.include("ext/lz4ruby/*.c")
   gem.files.include("ext/lz4ruby/*.h")
+
+  gem.required_ruby_version = '>= 1.9'
   
   # dependencies defined in Gemfile
 end
