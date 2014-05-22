@@ -1,5 +1,9 @@
 = ChangeLog
 
+== 0.3.2
+
+* Fix a bug #7
+
 == 0.3.1
 
 * Support raw data handling methods in JRuby
