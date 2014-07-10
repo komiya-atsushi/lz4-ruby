@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LZ4_REV_NO=113
+LZ4_REV_NO=119
 URL=http://lz4.googlecode.com/svn-history/r${LZ4_REV_NO}/trunk
 
 # get lz4 sources from web

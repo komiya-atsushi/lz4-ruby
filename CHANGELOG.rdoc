@@ -1,5 +1,9 @@
 = ChangeLog
 
+== 0.3.3
+
+* Update to lz4 latest version (r119) #9
+
 == 0.3.2
 
 * Fix a bug #7

@@ -148,7 +148,7 @@ static VALUE lz4internal_uncompress(VALUE self, VALUE input, VALUE in_size, VALU
   result = rb_str_new(NULL, buf_size);
   buf = RSTRING_PTR(result);
 
-  read_bytes = LZ4_uncompress_unknownOutputSize(src_p + header_size, buf, src_size - header_size, buf_size);
+  read_bytes = LZ4_decompress_safe(src_p + header_size, buf, src_size - header_size, buf_size);
   if (read_bytes < 0) {
     rb_raise(lz4_error, "Compressed data is maybe corrupted.");
   }
