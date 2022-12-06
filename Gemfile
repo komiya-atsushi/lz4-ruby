@@ -9,6 +9,6 @@ group :development do
   gem "rspec"
   gem "rdoc", "~> 3.12"
   gem "bundler"
-  gem "jeweler", "~> 1.8.3"
+  gem "jeweler", "~> 2.3.9"
   gem "rake-compiler", ">= 0"
 end
