@@ -16,15 +16,15 @@ class LZ4
   def self.compressHC(input, in_size = nil)
     return _compress(input, in_size, true)
   end
-  
+
   def self.decompress(input, in_size = nil, encoding = nil)
     in_size = input.bytesize if in_size == nil
     out_size, varbyte_len = decode_varbyte(input)
 
     if out_size < 0 || varbyte_len < 0
-      raise "Compressed data is maybe corrupted"
+      raise LZ4Error, "Compressed data is maybe corrupted"
     end
-    
+
     result = LZ4Internal::uncompress(input, in_size, varbyte_len, out_size)
     result.force_encoding(encoding) if encoding != nil
 
